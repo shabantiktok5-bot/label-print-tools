@@ -20,7 +20,7 @@ const {
   ogType = 'website'
 } = Astro.props;
 
-const site = Astro.site ?? new URL('https://labelmetric.example');
+const site = Astro.site ?? new URL('https://www.labelprinttools.com');
 const canonical = new URL(canonicalPath, site).toString();
 const socialImage = new URL(siteConfig.socialImage, site).toString();
 ---
@@ -53,7 +53,7 @@ const socialImage = new URL(siteConfig.socialImage, site).toString();
     <header class="site-header">
       <div class="container header-inner">
         <a class="brand" href="/" aria-label={`${siteConfig.name} home`}>
-          <span class="brand-mark" aria-hidden="true">LM</span>
+          <span class="brand-mark" aria-hidden="true">LP</span>
           <span>{siteConfig.name}</span>
         </a>
         <nav class="desktop-nav" aria-label="Primary navigation">
@@ -76,7 +76,7 @@ const socialImage = new URL(siteConfig.socialImage, site).toString();
         <div class="footer-grid">
           <div>
             <a class="brand" href="/">
-              <span class="brand-mark" aria-hidden="true">LM</span>
+              <span class="brand-mark" aria-hidden="true">LP</span>
               <span>{siteConfig.name}</span>
             </a>
             <p>{siteConfig.tagline}</p>

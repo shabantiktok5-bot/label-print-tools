@@ -1,7 +1,7 @@
 import { siteConfig } from '../config/site';
 
 export function absoluteUrl(pathname: string, site?: URL | string | null): string {
-  const base = site ? site.toString() : 'https://labelmetric.example';
+  const base = site ? site.toString() : 'https://www.labelprinttools.com';
   return new URL(pathname, base).toString();
 }
 

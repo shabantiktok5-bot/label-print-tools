@@ -1,4 +1,4 @@
-# LabelMetric Launch Manifest
+# Label Print Tools Launch Manifest
 
 ## Launch calculators
 
@@ -57,8 +57,8 @@
 
 ## Before public launch
 
-- Choose and verify the final brand/domain.
-- Replace placeholder email in `src/config/site.ts`.
-- Set Vercel `SITE_URL` to the exact primary production origin.
+- Brand/domain selected: **Label Print Tools** / **https://www.labelprinttools.com**.
+- Confirm `hello@labelprinttools.com` is configured or change the contact email in `src/config/site.ts`.
+- Set Vercel `SITE_URL` to `https://www.labelprinttools.com` when the custom domain is connected.
 - Review final Privacy/Terms wording for the site owner and any analytics/ads actually added.
 - After deployment, submit the sitemap to Google Search Console and Bing Webmaster Tools.

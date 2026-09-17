@@ -1,10 +1,10 @@
 export const siteConfig = {
-  name: 'LabelMetric',
-  shortName: 'LabelMetric',
-  tagline: 'Label printing calculators that work on the production floor.',
+  name: 'Label Print Tools',
+  shortName: 'Label Print Tools',
+  tagline: 'Free label printing calculators and production tools.',
   description:
     'Free label printing calculators for roll capacity, remaining labels, roll diameter, web width, thermal ribbons, ZPL dimensions, sheet layouts and production planning.',
-  email: 'hello@labelmetric.example',
+  email: 'hello@labelprinttools.com',
   socialImage: '/social-card.png',
   nav: [
     { label: 'Label Rolls', href: '/label-roll/' },

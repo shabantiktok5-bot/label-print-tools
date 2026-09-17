@@ -1,4 +1,4 @@
-# LabelMetric
+# Label Print Tools
 
 A production-ready Astro + TypeScript website for label-roll, label-production and thermal-printing calculators.
 
@@ -59,15 +59,11 @@ $env:SITE_URL="https://www.yourdomain.com"
 npm run build
 ```
 
-## 2. Change the brand and contact email
+## 2. Brand and canonical domain
 
-Edit only:
+The project is configured for **Label Print Tools** and the planned public domain **https://www.labelprinttools.com**.
 
-`src/config/site.ts`
-
-The starter uses **LabelMetric** as a working brand and `hello@labelmetric.example` as a placeholder email. Replace the email before public launch. If you choose a different brand, change it in this config file.
-
-The final public domain is controlled by the `SITE_URL` environment variable, not hard-coded across the pages.
+Brand/contact settings live in `src/config/site.ts`. The production canonical origin can be overridden with the `SITE_URL` environment variable. Before the custom domain is connected, the Vercel preview can still be used for testing; do not submit the preview URL to search engines.
 
 ## 3. Put the project on GitHub
 
@@ -76,7 +72,7 @@ Create a new empty GitHub repository, then from this project folder run:
 ```bash
 git init
 git add .
-git commit -m "Initial LabelMetric launch"
+git commit -m "Initial Label Print Tools launch"
 git branch -M main
 git remote add origin https://github.com/YOUR-USERNAME/YOUR-REPO.git
 git push -u origin main
@@ -91,7 +87,7 @@ You can also upload the extracted project folder through GitHub's web interface,
 3. Vercel should detect **Astro** automatically.
 4. Build command: `npm run build`
 5. Output directory: `dist`
-6. Add an environment variable named `SITE_URL` with the final canonical origin, for example `https://www.example.com`.
+6. Add an environment variable named `SITE_URL` with the final canonical origin, use `https://www.labelprinttools.com` once the custom domain is connected.
 7. Deploy.
 
 The site uses static output, so no database, paid API or server runtime is required for the calculators.
@@ -100,7 +96,7 @@ The site uses static output, so no database, paid API or server runtime is requi
 
 In Vercel open the project and go to **Settings → Domains**. Add both your root domain and the `www` version if you plan to use both. Vercel will show the DNS records required for your exact configuration. Add those records at your domain registrar.
 
-Choose one public version as the primary domain (for example `https://www.example.com`) and set `SITE_URL` to that exact origin. Redeploy after changing `SITE_URL` so canonicals, sitemap URLs, robots.txt and structured-data URLs use the final domain.
+Choose one public version as the primary domain (for example `https://www.labelprinttools.com`) and set `SITE_URL` to that exact origin. Redeploy after changing `SITE_URL` so canonicals, sitemap URLs, robots.txt and structured-data URLs use the final domain.
 
 Do not hard-code an old Vercel DNS IP from a tutorial; use the DNS values Vercel displays for your project at deployment time.
 
@@ -121,8 +117,7 @@ After the custom domain is live:
 
 Before public launch, replace:
 
-- Placeholder contact email in `src/config/site.ts`
-- Working brand if you choose another name
+- Confirm the contact email in `src/config/site.ts` can receive mail
 - Privacy/Terms wording with the final operator/contact details and any analytics or advertising disclosures you actually use
 
 If you add Google Analytics, AdSense, affiliate tracking, cookie tools or other third-party scripts later, update the privacy policy and consent behavior to match the jurisdictions and services involved.

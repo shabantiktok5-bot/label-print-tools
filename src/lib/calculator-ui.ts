@@ -40,7 +40,7 @@ export function setError(message = '') {
 }
 
 export function rememberForm(form: HTMLFormElement, key: string) {
-  const storageKey = `labelmetric:${key}`;
+  const storageKey = `labelprinttools:${key}`;
   try {
     const saved = localStorage.getItem(storageKey);
     if (saved) {

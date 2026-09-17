@@ -4,7 +4,7 @@ import Breadcrumbs from '../components/Breadcrumbs.astro';
 import { breadcrumbSchema } from '../lib/seo';
 const path='/methodology/';
 ---
-<BaseLayout title="Calculation Methodology – LabelMetric" description="See the formulas, units, assumptions, rounding rules and limitations used by LabelMetric label roll, production, thermal printing and sheet layout calculators." canonicalPath={path} schemas={[breadcrumbSchema([{name:'Home',path:'/'},{name:'Methodology',path}],Astro.site)]}>
+<BaseLayout title="Calculation Methodology – Label Print Tools" description="See the formulas, units, assumptions, rounding rules and limitations used by Label Print Tools label roll, production, thermal printing and sheet layout calculators." canonicalPath={path} schemas={[breadcrumbSchema([{name:'Home',path:'/'},{name:'Methodology',path}],Astro.site)]}>
   <Breadcrumbs items={[{name:'Home',href:'/'},{name:'Methodology'}]} />
   <article class="narrow" style="padding:42px 0 64px"><span class="eyebrow">Transparent calculations</span><h1>Calculation methodology</h1><p class="lead">The tools are designed to make the assumptions visible. Inputs are converted to a common internal unit before calculation, results are rounded for display only, and production-specific uncertainty is called out instead of hidden.</p>
     <h2>Unit handling</h2><p>Length inputs are converted internally to millimetres. Supported units include millimetres, centimetres, metres, inches, feet, micrometres and mil where appropriate. Conversions use exact relationships such as 25.4 mm per inch.</p>
