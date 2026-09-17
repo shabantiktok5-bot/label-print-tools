@@ -3,7 +3,7 @@ export const siteConfig = {
   shortName: 'Label Print Tools',
   tagline: 'Free label printing calculators and production tools.',
   description:
-    'Free label printing calculators for roll capacity, remaining labels, roll diameter, web width, thermal ribbons, ZPL dimensions, sheet layouts and production planning.',
+    'Free label printing calculators for roll capacity, remaining labels, roll diameter, web width, thermal ribbons, ZPL sizes and sheet layouts.',
   email: 'hello@labelprinttools.com',
   socialImage: '/social-card.png',
   nav: [
