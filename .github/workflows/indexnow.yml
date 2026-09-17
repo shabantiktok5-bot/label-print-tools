@@ -1,0 +1,77 @@
+name: Notify IndexNow
+
+on:
+  push:
+    branches:
+      - main
+
+permissions:
+  contents: read
+
+jobs:
+  indexnow:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 2
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Find changed files
+        id: changes
+        shell: bash
+        run: |
+          if [ "${{ github.event.before }}" = "0000000000000000000000000000000000000000" ]; then
+            CHANGED_FILES="$(git ls-files)"
+          else
+            CHANGED_FILES="$(git diff --name-only "${{ github.event.before }}" "${{ github.sha }}")"
+          fi
+
+          echo "Changed files:"
+          echo "$CHANGED_FILES"
+
+          {
+            echo "CHANGED_FILES<<EOF"
+            echo "$CHANGED_FILES"
+            echo "EOF"
+          } >> "$GITHUB_ENV"
+
+      - name: Wait for Vercel deployment
+        run: |
+          echo "Waiting for Vercel to publish the new version..."
+          sleep 120
+
+      - name: Check website
+        run: |
+          for i in {1..10}; do
+            if curl -fsS https://www.labelprinttools.com/ > /dev/null; then
+              echo "Website is reachable."
+              exit 0
+            fi
+
+            echo "Website not ready yet. Retrying..."
+            sleep 15
+          done
+
+          echo "Website could not be reached."
+          exit 1
+
+      - name: Verify IndexNow key
+        run: |
+          KEY_CONTENT="$(curl -fsS https://www.labelprinttools.com/94993b13ded74ff4ad46b8ff1f1dc913.txt)"
+
+          if [ "$KEY_CONTENT" != "94993b13ded74ff4ad46b8ff1f1dc913" ]; then
+            echo "IndexNow key verification failed."
+            exit 1
+          fi
+
+          echo "IndexNow key verified."
+
+      - name: Notify IndexNow
+        run: node scripts/indexnow-submit.mjs
