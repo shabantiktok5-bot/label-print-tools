@@ -1,0 +1,15 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Breadcrumbs from '../../components/Breadcrumbs.astro';
+import ToolCard from '../../components/ToolCard.astro';
+import { breadcrumbSchema } from '../../lib/seo';
+const crumbs = [{name:'Home',path:'/'},{name:'Production Calculators',path:'/production/'}];
+---
+<BaseLayout title="Label Production Calculators – Linear Run & Web Width" description="Plan label production with free calculators for linear run, web width, labels across and material requirements." canonicalPath="/production/" schemas={[breadcrumbSchema(crumbs, Astro.site)]}>
+  <Breadcrumbs items={[{name:'Home',href:'/'},{name:'Production Calculators'}]} />
+  <section class="hero"><div class="container"><span class="eyebrow">Production planning</span><h1>Label production calculators</h1><p class="lead">Turn label dimensions and order quantities into practical web-length and web-width requirements.</p></div></section>
+  <section class="section"><div class="container"><div class="grid tool-grid">
+    <ToolCard href="/production/label-linear-run-calculator/" title="Label Linear Run" description="Find the web length required for a quantity and repeat pitch." />
+    <ToolCard href="/production/label-web-width-calculator/" title="Label Web Width" description="Calculate web width from label width, columns, gap and side trim." />
+  </div></div></section>
+</BaseLayout>

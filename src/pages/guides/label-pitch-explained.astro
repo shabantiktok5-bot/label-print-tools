@@ -1,0 +1,16 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Breadcrumbs from '../../components/Breadcrumbs.astro';
+import { breadcrumbSchema } from '../../lib/seo';
+const path='/guides/label-pitch-explained/';
+const crumbs=[{name:'Home',path:'/'},{name:'Guides',path:'/guides/'},{name:'Label Pitch Explained',path}];
+---
+<BaseLayout title="Label Pitch Explained – Label Length, Gap & Repeat" description="Understand label pitch and repeat length: how label length plus the machine-direction gap determines linear material usage and labels per roll." canonicalPath={path} schemas={[breadcrumbSchema(crumbs,Astro.site)]} ogType="article">
+  <Breadcrumbs items={[{name:'Home',href:'/'},{name:'Guides',href:'/guides/'},{name:'Label Pitch'}]} />
+  <article class="narrow" style="padding:42px 0 60px"><span class="eyebrow">Production terminology</span><h1>Label pitch explained</h1><p class="lead">For a simple repeating label layout, pitch is the machine-direction distance from one label position to the same position on the next repeat.</p>
+    <h2>The basic relationship</h2><div class="formula">Label pitch = label length + machine-direction gap</div><p>A 100 mm label with a 3 mm gap has a 103 mm pitch. If two labels run across the web, the pitch is still 103 mm; each repeat simply produces two finished labels instead of one.</p>
+    <h2>Pitch is not web width</h2><p>Pitch describes travel in the machine direction. Web width describes the material across the press. Keeping those directions separate prevents one of the most common mistakes in roll and ribbon calculations.</p>
+    <h2>Special constructions</h2><p>Irregular repeats, staggered layouts, multiple shapes in one repeat and registration features can require a production repeat value that is not simply label length plus gap. In those cases, enter the actual repeat supplied by prepress or converting documentation.</p>
+    <div class="note">Use pitch in the <a href="/production/label-linear-run-calculator/">Label Linear Run Calculator</a>, <a href="/thermal-printing/thermal-ribbon-calculator/">Thermal Ribbon Calculator</a> and roll-capacity tools.</div>
+  </article>
+</BaseLayout>

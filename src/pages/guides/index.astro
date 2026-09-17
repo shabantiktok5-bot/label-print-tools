@@ -1,0 +1,17 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Breadcrumbs from '../../components/Breadcrumbs.astro';
+import ToolCard from '../../components/ToolCard.astro';
+import { breadcrumbSchema } from '../../lib/seo';
+const path='/guides/';
+---
+<BaseLayout title="Label Printing Guides – Roll Measurements, Pitch, Core Size & DPI" description="Practical guides for measuring label rolls, understanding label pitch, choosing the correct core diameter and working with thermal-printer DPI." canonicalPath={path} schemas={[breadcrumbSchema([{name:'Home',path:'/'},{name:'Guides',path}],Astro.site)]}>
+  <Breadcrumbs items={[{name:'Home',href:'/'},{name:'Guides'}]} />
+  <section class="hero"><div class="container"><span class="eyebrow">Measurement help</span><h1>Label printing guides</h1><p class="lead">Short reference pages for the measurements and terminology used by the calculators. These guides exist to help you enter better production data, not to pad the site with unrelated articles.</p></div></section>
+  <section class="section"><div class="container"><div class="grid tool-grid">
+    <ToolCard href="/guides/how-to-measure-label-roll-diameter/" title="How to Measure Label Roll Diameter" description="Measure outside diameter accurately and avoid common OD mistakes." tag="Guide" />
+    <ToolCard href="/guides/label-pitch-explained/" title="Label Pitch Explained" description="Understand label length, gap and machine-direction repeat." tag="Guide" />
+    <ToolCard href="/guides/core-id-vs-core-od/" title="Core ID vs Core OD" description="Know which core measurement belongs in roll geometry formulas." tag="Guide" />
+    <ToolCard href="/guides/203-vs-300-vs-600-dpi/" title="203 vs 300 vs 600 DPI" description="See how thermal-printer resolution changes ZPL dot dimensions." tag="Guide" />
+  </div></div></section>
+</BaseLayout>

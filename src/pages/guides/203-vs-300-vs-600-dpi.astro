@@ -1,0 +1,16 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Breadcrumbs from '../../components/Breadcrumbs.astro';
+import { breadcrumbSchema } from '../../lib/seo';
+const path='/guides/203-vs-300-vs-600-dpi/';
+const crumbs=[{name:'Home',path:'/'},{name:'Guides',path:'/guides/'},{name:'203 vs 300 vs 600 DPI',path}];
+---
+<BaseLayout title="203 vs 300 vs 600 DPI for Thermal Label Printers" description="Compare 203, 300 and 600 DPI thermal-printer resolutions and understand how DPI changes label dimensions and ZPL coordinates in printer dots." canonicalPath={path} schemas={[breadcrumbSchema(crumbs,Astro.site)]} ogType="article">
+  <Breadcrumbs items={[{name:'Home',href:'/'},{name:'Guides',href:'/guides/'},{name:'203 vs 300 vs 600 DPI'}]} />
+  <article class="narrow" style="padding:42px 0 60px"><span class="eyebrow">Thermal printing</span><h1>203 vs 300 vs 600 DPI</h1><p class="lead">DPI is the number of printable dots per inch. Higher DPI creates more addressable dots over the same physical distance, so a ZPL coordinate cannot be transferred blindly between resolutions.</p>
+    <h2>Physical size stays the same</h2><p>A 100 mm label is still 100 mm wide at every resolution. What changes is the integer dot count used by the printhead. That is why the same ZPL dimensions can print at the wrong physical size after moving a format between printers with different DPI.</p>
+    <div class="formula">dots = round((millimetres ÷ 25.4) × DPI)</div>
+    <h2>Choosing a resolution</h2><p>Resolution choice depends on printer hardware and the detail your application requires. Small text, fine graphics and compact barcodes can benefit from higher resolution, while many general shipping and warehouse labels are designed around lower-resolution printheads. Follow the printer and barcode specifications for your application.</p>
+    <div class="note">Use the <a href="/thermal-printing/zpl-label-size-calculator/">ZPL Label Size Calculator</a> to convert dimensions for 203, 300 or 600 DPI.</div>
+  </article>
+</BaseLayout>

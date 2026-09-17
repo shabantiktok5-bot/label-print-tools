@@ -1,0 +1,16 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Breadcrumbs from '../../components/Breadcrumbs.astro';
+import { breadcrumbSchema } from '../../lib/seo';
+const path='/guides/core-id-vs-core-od/';
+const crumbs=[{name:'Home',path:'/'},{name:'Guides',path:'/guides/'},{name:'Core ID vs Core OD',path}];
+---
+<BaseLayout title="Core ID vs Core OD for Label Roll Calculations" description="Learn the difference between label roll core inside diameter and outside diameter, and why roll-length and roll-capacity formulas require core OD." canonicalPath={path} schemas={[breadcrumbSchema(crumbs,Astro.site)]} ogType="article">
+  <Breadcrumbs items={[{name:'Home',href:'/'},{name:'Guides',href:'/guides/'},{name:'Core ID vs Core OD'}]} />
+  <article class="narrow" style="padding:42px 0 60px"><span class="eyebrow">Roll measurement</span><h1>Core ID vs core OD</h1><p class="lead">Core ID is the diameter of the hole. Core OD is the outside diameter of the core material. Roll geometry uses the outside surface where the label stock begins winding.</p>
+    <h2>Why core OD belongs in the formula</h2><p>The roll-length equation subtracts the core's cross-sectional area from the finished roll's cross-sectional area. Because no label material occupies the core wall, the boundary must be the outside of the core.</p>
+    <h2>Equipment specifications often use ID</h2><p>Printers and unwinders frequently specify core ID because the core must fit a spindle or holder. That specification is important for compatibility, but it is not automatically the number to place in a roll-length formula.</p>
+    <h2>When only ID is known</h2><p>If the core wall thickness is known, outside diameter can be estimated as core ID plus twice the wall thickness. Direct measurement is preferable when the calculation is production-critical.</p>
+    <div class="note">The <a href="/label-roll/roll-diameter-calculator/">Roll Diameter Calculator</a> and <a href="/label-roll/labels-per-roll-calculator/">Labels Per Roll Calculator</a> both ask for core OD.</div>
+  </article>
+</BaseLayout>

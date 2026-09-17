@@ -1,0 +1,20 @@
+---
+interface Tool { title: string; href: string; description: string; }
+const { tools } = Astro.props as { tools: Tool[] };
+---
+<section class="related">
+  <div class="container">
+    <div class="section-head">
+      <h2>Related label tools</h2>
+      <p>Move between calculations without re-learning the terminology.</p>
+    </div>
+    <div class="related-grid">
+      {tools.map((tool) => (
+        <a class="card tool-card" href={tool.href}>
+          <h3>{tool.title}</h3>
+          <p>{tool.description}</p>
+        </a>
+      ))}
+    </div>
+  </div>
+</section>

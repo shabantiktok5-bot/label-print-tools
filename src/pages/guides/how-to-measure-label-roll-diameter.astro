@@ -1,0 +1,17 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Breadcrumbs from '../../components/Breadcrumbs.astro';
+import RollDiagram from '../../components/RollDiagram.astro';
+import { breadcrumbSchema } from '../../lib/seo';
+const path='/guides/how-to-measure-label-roll-diameter/';
+const crumbs=[{name:'Home',path:'/'},{name:'Guides',path:'/guides/'},{name:'How to Measure Label Roll Diameter',path}];
+---
+<BaseLayout title="How to Measure Label Roll Diameter for Roll Calculations" description="Learn how to measure label roll outer diameter and core outside diameter accurately before using a labels-per-roll or labels-remaining calculator." canonicalPath={path} schemas={[breadcrumbSchema(crumbs,Astro.site)]} ogType="article">
+  <Breadcrumbs items={[{name:'Home',href:'/'},{name:'Guides',href:'/guides/'},{name:'Measure Roll Diameter'}]} />
+  <article class="narrow" style="padding:42px 0 60px"><span class="eyebrow">Measurement guide</span><h1>How to measure label roll diameter</h1><p class="lead">Roll-geometry calculations are sensitive to diameter. A careful measurement is more valuable than adding extra decimal places to the formula.</p><div class="card" style="margin:28px 0"><RollDiagram/></div>
+    <h2>Measure the finished outside diameter</h2><p>Measure straight through the centre of the roll from one outer edge to the opposite outer edge. Keep the measuring tool perpendicular to the roll faces so you do not accidentally measure a diagonal. For soft or loosely wound stock, avoid squeezing the roll.</p>
+    <h2>Use core outside diameter in roll-geometry formulas</h2><p>The wound material begins at the outside surface of the core. That is why the calculator asks for core OD rather than the hole diameter. If a supplier only gives core ID, measure the core wall or the outside directly when accuracy matters.</p>
+    <h2>Measure more than once</h2><p>Real rolls can be slightly out of round. Measuring at two or more orientations and using a representative value can reduce error, especially on partially used or soft-wound rolls.</p>
+    <div class="note"><strong>Next:</strong> Enter the measured OD into the <a href="/label-roll/labels-remaining-calculator/">Labels Remaining on Roll Calculator</a> or <a href="/label-roll/roll-length-calculator/">Roll Length Calculator</a>.</div>
+  </article>
+</BaseLayout>

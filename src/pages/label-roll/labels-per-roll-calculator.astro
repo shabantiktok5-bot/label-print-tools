@@ -1,0 +1,56 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Breadcrumbs from '../../components/Breadcrumbs.astro';
+import RelatedTools from '../../components/RelatedTools.astro';
+import RollDiagram from '../../components/RollDiagram.astro';
+import { breadcrumbSchema, webApplicationSchema } from '../../lib/seo';
+const title='Labels Per Roll Calculator – Label Roll Capacity & Length';
+const description='Calculate approximately how many labels fit on a roll from finished roll OD, core diameter, material thickness, label length, gap and labels across.';
+const path='/label-roll/labels-per-roll-calculator/';
+const crumbs=[{name:'Home',path:'/'},{name:'Label Roll Calculators',path:'/label-roll/'},{name:'Labels Per Roll Calculator',path}];
+---
+<BaseLayout title={title} description={description} canonicalPath={path} schemas={[breadcrumbSchema(crumbs,Astro.site),webApplicationSchema({name:'Labels Per Roll Calculator',description,path,site:Astro.site})]}>
+  <Breadcrumbs items={[{name:'Home',href:'/'},{name:'Label Roll Calculators',href:'/label-roll/'},{name:'Labels Per Roll'}]} />
+  <section class="tool-page-head"><div class="container"><span class="eyebrow">Roll capacity</span><h1>Labels Per Roll Calculator</h1><p class="lead">Estimate finished-roll label capacity and linear web length from roll geometry. Useful for quoting, converting and checking target roll quantities.</p></div></section>
+  <section class="container tool-layout">
+    <div class="calculator">
+      <form id="labels-per-roll-form">
+        <div class="form-grid">
+          <div class="field"><label for="outerDiameter">Finished roll OD</label><div class="input-row"><input id="outerDiameter" name="outerDiameter" type="number" value="250" min="0" step="any" required/><select name="outerDiameterUnit" class="unit"><option value="mm">mm</option><option value="in">in</option><option value="cm">cm</option></select></div></div>
+          <div class="field"><label for="coreDiameter">Core OD</label><div class="input-row"><input id="coreDiameter" name="coreDiameter" type="number" value="76" min="0" step="any" required/><select name="coreDiameterUnit" class="unit"><option value="mm">mm</option><option value="in">in</option><option value="cm">cm</option></select></div></div>
+          <div class="field"><label for="thickness">Material + liner thickness</label><div class="input-row"><input id="thickness" name="thickness" type="number" value="160" min="0" step="any" required/><select name="thicknessUnit" class="unit"><option value="um">µm</option><option value="mil">mil</option><option value="mm">mm</option></select></div></div>
+          <div class="field"><label for="labelLength">Label length</label><div class="input-row"><input id="labelLength" name="labelLength" type="number" value="100" min="0" step="any" required/><select name="labelLengthUnit" class="unit"><option value="mm">mm</option><option value="in">in</option><option value="cm">cm</option></select></div></div>
+          <div class="field"><label for="gap">Gap</label><div class="input-row"><input id="gap" name="gap" type="number" value="3" min="0" step="any" required/><select name="gapUnit" class="unit"><option value="mm">mm</option><option value="in">in</option><option value="cm">cm</option></select></div></div>
+          <div class="field"><label for="labelsAcross">Labels across</label><input id="labelsAcross" name="labelsAcross" type="number" value="1" min="1" step="1" required/></div>
+        </div>
+        <div class="calc-actions"><button class="button primary" type="submit">Calculate roll capacity</button><button class="button secondary" type="reset">Reset</button></div>
+        <p id="error" class="error" role="alert"></p>
+      </form>
+      <div id="result" class="result" hidden aria-live="polite">
+        <span class="result-kicker">Estimated labels per roll</span><strong id="result-labels" class="result-main">—</strong>
+        <div class="result-grid"><div class="metric"><span>Web length</span><strong id="result-length">—</strong></div><div class="metric"><span>Repeats</span><strong id="result-repeats">—</strong></div><div class="metric"><span>Pitch</span><strong id="result-pitch">—</strong></div></div>
+      </div>
+    </div>
+    <aside class="diagram-card"><h2>Roll geometry</h2><p>Use the outside diameter of the finished wound roll and the outside diameter of the empty core. Material thickness should include liner.</p><RollDiagram/><p><a href="/guides/label-pitch-explained/">Understand label pitch and repeat length →</a></p></aside>
+  </section>
+  <section class="content"><div class="narrow">
+    <h2>How many labels fit on a roll?</h2><p>Capacity depends on the usable annular area between the core and finished roll OD, the effective material caliper and the repeat pitch. Labels across the web multiply the number of finished labels produced by each machine-direction repeat.</p>
+    <div class="formula">Web length = π × (OD² − Core OD²) ÷ (4 × thickness)<br/>Labels = floor(web length ÷ pitch) × labels across</div>
+    <h2>Use effective caliper for better estimates</h2><p>Nominal face-stock thickness alone is not enough. The release liner and adhesive contribute to wound thickness. If you have a known roll with a verified label count, you can calibrate an effective caliper from that roll and use the same stock value for future estimates.</p>
+    <h2>Capacity is not the same as a guaranteed production count</h2><p>Converters may add leader, trailer, splices, setup waste or specified winding limits. Use this result as geometric capacity, then apply your own production rules when setting a sellable roll quantity.</p>
+  </div></section>
+  <RelatedTools tools={[
+    {title:'Labels Remaining on Roll',href:'/label-roll/labels-remaining-calculator/',description:'Estimate a partially used roll.'},
+    {title:'Roll Diameter Calculator',href:'/label-roll/roll-diameter-calculator/',description:'Find OD from a target label quantity.'},
+    {title:'Thermal Ribbon Calculator',href:'/thermal-printing/thermal-ribbon-calculator/',description:'Estimate ribbon consumption for the finished quantity.'}
+  ]}/>
+  <script>
+    import { labelsFromRoll } from '../../lib/calculations';
+    import { formatNumber } from '../../lib/units';
+    import { lengthMm, num, rememberForm, setError, setText, showResult, hideResult } from '../../lib/calculator-ui';
+    const form=document.getElementById('labels-per-roll-form') as HTMLFormElement;
+    rememberForm(form,'labels-per-roll');
+    function calculate(){setError('');try{const outerDiameterMm=lengthMm(form,'outerDiameter','outerDiameterUnit');const coreDiameterMm=lengthMm(form,'coreDiameter','coreDiameterUnit');const thicknessMm=lengthMm(form,'thickness','thicknessUnit');const pitchMm=lengthMm(form,'labelLength','labelLengthUnit')+lengthMm(form,'gap','gapUnit');const labelsAcross=num(form,'labelsAcross');const r=labelsFromRoll({outerDiameterMm,coreDiameterMm,thicknessMm,pitchMm,labelsAcross});setText('result-labels',formatNumber(r.labels,0));setText('result-length',`${formatNumber(r.lengthMm/1000,2)} m`);setText('result-repeats',formatNumber(r.repeats,0));setText('result-pitch',`${formatNumber(pitchMm,2)} mm`);showResult();}catch(e){hideResult();setError(e instanceof Error?e.message:'Check the values and try again.');}}
+    form.addEventListener('submit',e=>{e.preventDefault();calculate();});form.addEventListener('reset',()=>setTimeout(()=>hideResult(),0));calculate();
+  </script>
+</BaseLayout>

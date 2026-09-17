@@ -1,0 +1,10 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Breadcrumbs from '../components/Breadcrumbs.astro';
+import { breadcrumbSchema } from '../lib/seo';
+const path='/about/';
+---
+<BaseLayout title="About LabelMetric – Label Printing Calculation Tools" description="Learn why LabelMetric focuses on practical label roll, production and thermal-printing calculations instead of a large collection of unrelated calculators." canonicalPath={path} schemas={[breadcrumbSchema([{name:'Home',path:'/'},{name:'About',path}],Astro.site)]}>
+  <Breadcrumbs items={[{name:'Home',href:'/'},{name:'About'}]} />
+  <article class="narrow" style="padding:42px 0 64px"><span class="eyebrow">About the project</span><h1>Focused tools for label production</h1><p class="lead">LabelMetric is a focused collection of browser-based calculators for label rolls, converting, thermal printing and sheet layouts.</p><h2>Why the site exists</h2><p>Production calculations are often repeated in spreadsheets, notes and vendor-specific calculators. The goal here is to make common geometry and planning calculations quick, understandable and connected to one another, without requiring an account or uploading production data.</p><h2>How the tools are built</h2><p>Calculations run locally in the browser using transparent formulas documented on the methodology page. The website is designed as a static-first application, which keeps it fast and reduces unnecessary server-side data handling.</p><h2>Scope</h2><p>The site intentionally stays focused. New tools should be directly useful to label printing, label converting, roll inventory, thermal printing or closely related production planning.</p></article>
+</BaseLayout>

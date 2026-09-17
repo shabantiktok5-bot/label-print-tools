@@ -1,0 +1,14 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Breadcrumbs from '../../components/Breadcrumbs.astro';
+import ToolCard from '../../components/ToolCard.astro';
+import { breadcrumbSchema } from '../../lib/seo';
+const crumbs = [{name:'Home',path:'/'},{name:'Sheet Label Tools',path:'/sheet-labels/'}];
+---
+<BaseLayout title="Sheet Label Calculators – Labels Per Sheet & Layout" description="Calculate how many labels fit on A4, Letter or custom sheets and compare normal versus rotated layouts." canonicalPath="/sheet-labels/" schemas={[breadcrumbSchema(crumbs, Astro.site)]}>
+  <Breadcrumbs items={[{name:'Home',href:'/'},{name:'Sheet Label Tools'}]} />
+  <section class="hero"><div class="container"><span class="eyebrow">Sheet layouts</span><h1>Sheet label calculators</h1><p class="lead">Compare label orientation, margins and gaps to find the best sheet yield before you print.</p></div></section>
+  <section class="section"><div class="container"><div class="grid tool-grid">
+    <ToolCard href="/sheet-labels/labels-per-sheet-calculator/" title="Labels Per Sheet Calculator" description="Find rows, columns, total labels and utilization for normal and rotated layouts." />
+  </div></div></section>
+</BaseLayout>

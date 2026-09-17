@@ -1,0 +1,32 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Breadcrumbs from '../../components/Breadcrumbs.astro';
+import RelatedTools from '../../components/RelatedTools.astro';
+import RollDiagram from '../../components/RollDiagram.astro';
+import { breadcrumbSchema, webApplicationSchema } from '../../lib/seo';
+const title='Label Roll Length Calculator – Convert Roll Diameter to Web Length';
+const description='Calculate approximate label stock roll length from outside diameter, core outside diameter and total material thickness. Results in metres and feet.';
+const path='/label-roll/roll-length-calculator/';
+const crumbs=[{name:'Home',path:'/'},{name:'Label Roll Calculators',path:'/label-roll/'},{name:'Label Roll Length Calculator',path}];
+---
+<BaseLayout title={title} description={description} canonicalPath={path} schemas={[breadcrumbSchema(crumbs,Astro.site),webApplicationSchema({name:'Label Roll Length Calculator',description,path,site:Astro.site})]}>
+  <Breadcrumbs items={[{name:'Home',href:'/'},{name:'Label Roll Calculators',href:'/label-roll/'},{name:'Roll Length'}]} />
+  <section class="tool-page-head"><div class="container"><span class="eyebrow">Roll stock length</span><h1>Label Roll Length Calculator</h1><p class="lead">Estimate how much label stock is wound on a roll using only outer diameter, core diameter and material caliper.</p></div></section>
+  <section class="container tool-layout"><div class="calculator"><form id="roll-length-form"><div class="form-grid">
+    <div class="field"><label for="outerDiameter">Roll OD</label><div class="input-row"><input id="outerDiameter" name="outerDiameter" type="number" value="250" min="0" step="any" required/><select name="outerDiameterUnit" class="unit"><option value="mm">mm</option><option value="in">in</option><option value="cm">cm</option></select></div></div>
+    <div class="field"><label for="coreDiameter">Core OD</label><div class="input-row"><input id="coreDiameter" name="coreDiameter" type="number" value="76" min="0" step="any" required/><select name="coreDiameterUnit" class="unit"><option value="mm">mm</option><option value="in">in</option><option value="cm">cm</option></select></div></div>
+    <div class="field full"><label for="thickness">Total material thickness</label><div class="input-row"><input id="thickness" name="thickness" type="number" value="160" min="0" step="any" required/><select name="thicknessUnit" class="unit"><option value="um">µm</option><option value="mil">mil</option><option value="mm">mm</option></select></div><small>Include facestock, adhesive and liner.</small></div>
+  </div><div class="calc-actions"><button class="button primary" type="submit">Calculate roll length</button><button class="button secondary" type="reset">Reset</button></div><p id="error" class="error" role="alert"></p></form>
+  <div id="result" class="result" hidden><span class="result-kicker">Estimated web length</span><strong id="result-metres" class="result-main">—</strong><div class="result-grid"><div class="metric"><span>Feet</span><strong id="result-feet">—</strong></div><div class="metric"><span>Millimetres</span><strong id="result-mm">—</strong></div><div class="metric"><span>Wound radial depth</span><strong id="result-depth">—</strong></div></div></div></div>
+  <aside class="diagram-card"><h2>Three measurements</h2><p>Roll length does not require label pitch because it measures the continuous stock rather than finished label count.</p><RollDiagram/></aside></section>
+  <section class="content"><div class="narrow"><h2>How roll length is estimated</h2><p>The calculation compares the cross-sectional area of the finished roll with the core, then divides by the material thickness. All inputs are converted to millimetres internally before the formula is applied.</p><div class="formula">Web length = π × (OD² − Core OD²) ÷ (4 × material thickness)</div><h2>Why thickness matters so much</h2><p>The formula assumes each wound layer has a consistent effective thickness. A stock that is 10% thicker produces a meaningfully shorter roll at the same OD, so use measured or manufacturer-specified total caliper when possible.</p></div></section>
+  <RelatedTools tools={[{title:'Labels Per Roll',href:'/label-roll/labels-per-roll-calculator/',description:'Convert this length into label capacity using pitch.'},{title:'Labels Remaining',href:'/label-roll/labels-remaining-calculator/',description:'Use the same geometry for a partial roll.'},{title:'Label Linear Run',href:'/production/label-linear-run-calculator/',description:'Start with quantity and calculate required length.'}]}/>
+  <script>
+    import { rollLengthMm } from '../../lib/calculations';
+    import { formatNumber } from '../../lib/units';
+    import { lengthMm,rememberForm,setError,setText,showResult,hideResult } from '../../lib/calculator-ui';
+    const form=document.getElementById('roll-length-form') as HTMLFormElement;rememberForm(form,'roll-length');
+    function calculate(){setError('');try{const outerDiameterMm=lengthMm(form,'outerDiameter','outerDiameterUnit');const coreDiameterMm=lengthMm(form,'coreDiameter','coreDiameterUnit');const thicknessMm=lengthMm(form,'thickness','thicknessUnit');const length=rollLengthMm({outerDiameterMm,coreDiameterMm,thicknessMm});setText('result-metres',`${formatNumber(length/1000,2)} m`);setText('result-feet',`${formatNumber(length/304.8,2)} ft`);setText('result-mm',formatNumber(length,0));setText('result-depth',`${formatNumber((outerDiameterMm-coreDiameterMm)/2,1)} mm`);showResult();}catch(e){hideResult();setError(e instanceof Error?e.message:'Check the values and try again.');}}
+    form.addEventListener('submit',e=>{e.preventDefault();calculate();});form.addEventListener('reset',()=>setTimeout(()=>hideResult(),0));calculate();
+  </script>
+</BaseLayout>

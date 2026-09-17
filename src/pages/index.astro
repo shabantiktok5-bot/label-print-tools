@@ -1,0 +1,69 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import ToolCard from '../components/ToolCard.astro';
+import { siteConfig } from '../config/site';
+import { organizationSchema, websiteSchema } from '../lib/seo';
+
+const schemas = [organizationSchema(Astro.site), websiteSchema(Astro.site)];
+---
+<BaseLayout
+  title="Label Printing Calculators – Roll, Ribbon, ZPL & Production Tools"
+  description={siteConfig.description}
+  canonicalPath="/"
+  schemas={schemas}
+>
+  <section class="hero">
+    <div class="container">
+      <span class="eyebrow">Free • browser-based • no signup</span>
+      <h1>Label printing calculations without spreadsheet guesswork.</h1>
+      <p class="lead">Calculate roll capacity, labels remaining, finished roll diameter, web width, linear run, thermal ribbon usage, ZPL dimensions and sheet layouts. Mixed units are supported and calculations stay in your browser.</p>
+      <div class="hero-actions">
+        <a class="button primary" href="/label-roll/labels-remaining-calculator/">Estimate labels remaining</a>
+        <a class="button secondary" href="/methodology/">See calculation methodology</a>
+      </div>
+      <div class="kpi-strip" aria-label="Site benefits">
+        <div class="kpi"><strong>Client-side</strong><span>No file uploads or paid API calls.</span></div>
+        <div class="kpi"><strong>Mixed units</strong><span>Use mm, inches, microns, feet and mil where they make sense.</span></div>
+        <div class="kpi"><strong>Production focused</strong><span>Tools connect roll geometry, printing and material planning.</span></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <div class="section-head">
+        <h2>Popular label roll calculators</h2>
+        <p>Measure a real roll, estimate capacity, or reverse-calculate the outside diameter needed for a target quantity.</p>
+      </div>
+      <div class="grid tool-grid">
+        <ToolCard href="/label-roll/labels-remaining-calculator/" title="Labels Remaining on Roll" description="Estimate remaining labels from current roll OD, core OD, material caliper and label pitch." />
+        <ToolCard href="/label-roll/labels-per-roll-calculator/" title="Labels Per Roll" description="Calculate approximate label capacity and total web length from roll geometry." />
+        <ToolCard href="/label-roll/roll-diameter-calculator/" title="Label Roll Diameter" description="Find the outside diameter required for a target label quantity." />
+        <ToolCard href="/label-roll/roll-length-calculator/" title="Label Roll Length" description="Convert outside diameter, core diameter and material thickness into web length." />
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <div class="section-head">
+        <h2>Production and thermal printing tools</h2>
+        <p>Plan the run after you know the label dimensions and quantity.</p>
+      </div>
+      <div class="grid tool-grid">
+        <ToolCard href="/production/label-linear-run-calculator/" title="Label Linear Run" description="Calculate metres or feet of web required from quantity, pitch and labels across." />
+        <ToolCard href="/production/label-web-width-calculator/" title="Label Web Width" description="Calculate required web width or how many labels fit across an available web." />
+        <ToolCard href="/thermal-printing/thermal-ribbon-calculator/" title="Thermal Ribbon" description="Estimate labels per ribbon and ribbons needed for a production quantity." />
+        <ToolCard href="/thermal-printing/zpl-label-size-calculator/" title="ZPL Label Size" description="Convert mm or inches into printer dots and ready-to-copy ^PW / ^LL values." />
+        <ToolCard href="/sheet-labels/labels-per-sheet-calculator/" title="Labels Per Sheet" description="Compare normal and rotated layouts for A4, Letter or custom sheet sizes." />
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="narrow card">
+      <h2 style="margin-top:0">Built around one topic, not hundreds of unrelated calculators</h2>
+      <p>LabelMetric focuses on label rolls, converting equipment, thermal printing and production planning. Each tool uses the same terminology and links to the next calculation in the workflow, so you can move from roll geometry to run length, ribbon usage and final print dimensions without starting over.</p>
+    </div>
+  </section>
+</BaseLayout>

@@ -1,0 +1,11 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Breadcrumbs from '../components/Breadcrumbs.astro';
+import { breadcrumbSchema } from '../lib/seo';
+import { siteConfig } from '../config/site';
+const path='/contact/';
+---
+<BaseLayout title="Contact LabelMetric" description="Contact LabelMetric about calculator feedback, formula corrections, measurement terminology or suggestions for label-production tools." canonicalPath={path} schemas={[breadcrumbSchema([{name:'Home',path:'/'},{name:'Contact',path}],Astro.site)]}>
+  <Breadcrumbs items={[{name:'Home',href:'/'},{name:'Contact'}]} />
+  <article class="narrow" style="padding:42px 0 64px"><span class="eyebrow">Feedback</span><h1>Contact</h1><p class="lead">Found a calculation edge case, unclear measurement label or production workflow we should support?</p><div class="card"><h2 style="margin-top:0">Email</h2><p><a href={`mailto:${siteConfig.email}`}>{siteConfig.email}</a></p><p style="color:var(--muted)">Before launch, replace the placeholder email once in <code>src/config/site.ts</code>.</p></div></article>
+</BaseLayout>

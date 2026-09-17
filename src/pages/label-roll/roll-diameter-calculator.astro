@@ -1,0 +1,39 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Breadcrumbs from '../../components/Breadcrumbs.astro';
+import RelatedTools from '../../components/RelatedTools.astro';
+import RollDiagram from '../../components/RollDiagram.astro';
+import { breadcrumbSchema, webApplicationSchema } from '../../lib/seo';
+const title='Label Roll Diameter Calculator – Calculate Required OD';
+const description='Calculate the outside diameter required for a target label quantity using core diameter, material thickness, label pitch, labels across and optional extra web length.';
+const path='/label-roll/roll-diameter-calculator/';
+const crumbs=[{name:'Home',path:'/'},{name:'Label Roll Calculators',path:'/label-roll/'},{name:'Label Roll Diameter Calculator',path}];
+---
+<BaseLayout title={title} description={description} canonicalPath={path} schemas={[breadcrumbSchema(crumbs,Astro.site),webApplicationSchema({name:'Label Roll Diameter Calculator',description,path,site:Astro.site})]}>
+  <Breadcrumbs items={[{name:'Home',href:'/'},{name:'Label Roll Calculators',href:'/label-roll/'},{name:'Roll Diameter'}]} />
+  <section class="tool-page-head"><div class="container"><span class="eyebrow">Reverse roll geometry</span><h1>Label Roll Diameter Calculator</h1><p class="lead">Enter the quantity you need and calculate the approximate finished roll outside diameter. Useful for checking printer unwind limits and production targets.</p></div></section>
+  <section class="container tool-layout">
+    <div class="calculator"><form id="roll-diameter-form"><div class="form-grid">
+      <div class="field"><label for="labelCount">Target label quantity</label><input id="labelCount" name="labelCount" type="number" min="1" step="1" value="5000" required/></div>
+      <div class="field"><label for="labelsAcross">Labels across</label><input id="labelsAcross" name="labelsAcross" type="number" min="1" step="1" value="1" required/></div>
+      <div class="field"><label for="coreDiameter">Core OD</label><div class="input-row"><input id="coreDiameter" name="coreDiameter" type="number" min="0" step="any" value="76" required/><select name="coreDiameterUnit" class="unit"><option value="mm">mm</option><option value="in">in</option><option value="cm">cm</option></select></div></div>
+      <div class="field"><label for="thickness">Material + liner thickness</label><div class="input-row"><input id="thickness" name="thickness" type="number" min="0" step="any" value="160" required/><select name="thicknessUnit" class="unit"><option value="um">µm</option><option value="mil">mil</option><option value="mm">mm</option></select></div></div>
+      <div class="field"><label for="labelLength">Label length</label><div class="input-row"><input id="labelLength" name="labelLength" type="number" min="0" step="any" value="100" required/><select name="labelLengthUnit" class="unit"><option value="mm">mm</option><option value="in">in</option><option value="cm">cm</option></select></div></div>
+      <div class="field"><label for="gap">Gap</label><div class="input-row"><input id="gap" name="gap" type="number" min="0" step="any" value="3" required/><select name="gapUnit" class="unit"><option value="mm">mm</option><option value="in">in</option><option value="cm">cm</option></select></div></div>
+      <div class="field full"><label for="extraWebLength">Extra leader/trailer web <span style="font-weight:500;color:var(--muted)">(optional)</span></label><div class="input-row"><input id="extraWebLength" name="extraWebLength" type="number" min="0" step="any" value="0"/><select name="extraWebLengthUnit" class="unit"><option value="m">m</option><option value="ft">ft</option><option value="mm">mm</option></select></div></div>
+    </div><div class="calc-actions"><button class="button primary" type="submit">Calculate roll OD</button><button class="button secondary" type="reset">Reset</button></div><p id="error" class="error" role="alert"></p></form>
+      <div id="result" class="result" hidden aria-live="polite"><span class="result-kicker">Required finished roll OD</span><strong id="result-od" class="result-main">—</strong><div class="result-grid"><div class="metric"><span>Required web</span><strong id="result-length">—</strong></div><div class="metric"><span>Machine repeats</span><strong id="result-repeats">—</strong></div><div class="metric"><span>OD in inches</span><strong id="result-inches">—</strong></div></div></div>
+    </div>
+    <aside class="diagram-card"><h2>Reverse the roll calculation</h2><p>Instead of measuring OD to estimate quantity, this tool starts with quantity and calculates the approximate OD needed.</p><RollDiagram/><p><a href="/guides/core-id-vs-core-od/">Core ID vs core OD: which one belongs in the formula? →</a></p></aside>
+  </section>
+  <section class="content"><div class="narrow"><h2>Roll diameter formula</h2><p>The requested label quantity is converted to machine-direction repeats based on labels across. The required web length is calculated from pitch, then roll geometry is solved for the outside diameter.</p><div class="formula">Repeats = ceil(label quantity ÷ labels across)<br/>Web length = repeats × pitch + extra web<br/>OD = √(Core OD² + 4 × thickness × web length ÷ π)</div><h2>Check equipment limits</h2><p>A mathematically valid roll may still be too large for a printer, rewinder, applicator or shipping specification. Compare the calculated OD with your equipment's maximum roll diameter and allow room for normal production variation.</p></div></section>
+  <RelatedTools tools={[{title:'Labels Per Roll',href:'/label-roll/labels-per-roll-calculator/',description:'Start with OD and calculate capacity.'},{title:'Label Linear Run',href:'/production/label-linear-run-calculator/',description:'Calculate the underlying web length directly.'},{title:'Thermal Ribbon',href:'/thermal-printing/thermal-ribbon-calculator/',description:'Plan ribbon usage for the same quantity.'}]}/>
+  <script>
+    import { requiredRollDiameterMm } from '../../lib/calculations';
+    import { formatNumber } from '../../lib/units';
+    import { lengthMm,num,rememberForm,setError,setText,showResult,hideResult } from '../../lib/calculator-ui';
+    const form=document.getElementById('roll-diameter-form') as HTMLFormElement;rememberForm(form,'roll-diameter');
+    function calculate(){setError('');try{const labelCount=num(form,'labelCount');const labelsAcross=num(form,'labelsAcross');const coreDiameterMm=lengthMm(form,'coreDiameter','coreDiameterUnit');const thicknessMm=lengthMm(form,'thickness','thicknessUnit');const pitchMm=lengthMm(form,'labelLength','labelLengthUnit')+lengthMm(form,'gap','gapUnit');const extraWebLengthMm=lengthMm(form,'extraWebLength','extraWebLengthUnit');const r=requiredRollDiameterMm({labelCount,labelsAcross,coreDiameterMm,thicknessMm,pitchMm,extraWebLengthMm});setText('result-od',`${formatNumber(r.outerDiameterMm,1)} mm`);setText('result-length',`${formatNumber(r.requiredLengthMm/1000,2)} m`);setText('result-repeats',formatNumber(r.repeats,0));setText('result-inches',`${formatNumber(r.outerDiameterMm/25.4,2)} in`);showResult();}catch(e){hideResult();setError(e instanceof Error?e.message:'Check the values and try again.');}}
+    form.addEventListener('submit',e=>{e.preventDefault();calculate();});form.addEventListener('reset',()=>setTimeout(()=>hideResult(),0));calculate();
+  </script>
+</BaseLayout>

@@ -1,0 +1,20 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Breadcrumbs from '../components/Breadcrumbs.astro';
+import { breadcrumbSchema } from '../lib/seo';
+const path='/methodology/';
+---
+<BaseLayout title="Calculation Methodology – LabelMetric" description="See the formulas, units, assumptions, rounding rules and limitations used by LabelMetric label roll, production, thermal printing and sheet layout calculators." canonicalPath={path} schemas={[breadcrumbSchema([{name:'Home',path:'/'},{name:'Methodology',path}],Astro.site)]}>
+  <Breadcrumbs items={[{name:'Home',href:'/'},{name:'Methodology'}]} />
+  <article class="narrow" style="padding:42px 0 64px"><span class="eyebrow">Transparent calculations</span><h1>Calculation methodology</h1><p class="lead">The tools are designed to make the assumptions visible. Inputs are converted to a common internal unit before calculation, results are rounded for display only, and production-specific uncertainty is called out instead of hidden.</p>
+    <h2>Unit handling</h2><p>Length inputs are converted internally to millimetres. Supported units include millimetres, centimetres, metres, inches, feet, micrometres and mil where appropriate. Conversions use exact relationships such as 25.4 mm per inch.</p>
+    <h2>Roll geometry</h2><div class="formula">Web length = π × (outer diameter² − core outside diameter²) ÷ (4 × effective material thickness)</div><p>This geometric model treats the wound material as a uniform annulus. It is appropriate for estimation, but real rolls can differ because of winding tension, compression, air, adhesive behavior, caliper variation, splices and measurement error.</p>
+    <h2>Label count</h2><p>Repeat pitch is normally label length plus the machine-direction gap. Whole repeats are used for finished label counts. For multiple labels across, repeats are multiplied by the number of columns.</p>
+    <h2>Reverse roll diameter</h2><div class="formula">OD = √(core OD² + 4 × thickness × required web length ÷ π)</div><p>Required web length is based on whole machine-direction repeats and can include additional leader/trailer allowance.</p>
+    <h2>Thermal ribbon</h2><p>Ribbon calculations assume ribbon travel approximately follows media travel. A user-supplied waste percentage can account for non-printing consumption, but printer backfeed, calibration behavior and process-specific ribbon usage can differ.</p>
+    <h2>ZPL dots</h2><div class="formula">dots = round((millimetres ÷ 25.4) × DPI)</div><p>Dot dimensions are rounded to whole dots. The generated ^PW and ^LL values are basic size commands, not a complete printer configuration.</p>
+    <h2>Sheet layout</h2><p>Sheet yield is calculated independently in normal and 90-degree rotated orientations after subtracting margins and including gaps. Production features such as bleed, gripper, registration marks and cutter tolerances are not inferred automatically.</p>
+    <h2>Verification approach</h2><p>Formula functions are covered by automated unit tests for known geometry, unit conversions, reverse calculations, web width, ribbon capacity, ZPL dots and sheet layouts. A production build runs type and Astro checks before deployment.</p>
+    <div class="note"><strong>Important:</strong> These tools provide engineering estimates, not certified production specifications. Verify critical jobs against your actual stock, printer, die, press and supplier documentation.</div>
+  </article>
+</BaseLayout>

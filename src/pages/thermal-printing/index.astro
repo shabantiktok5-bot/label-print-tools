@@ -1,0 +1,15 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Breadcrumbs from '../../components/Breadcrumbs.astro';
+import ToolCard from '../../components/ToolCard.astro';
+import { breadcrumbSchema } from '../../lib/seo';
+const crumbs = [{name:'Home',path:'/'},{name:'Thermal Printing Tools',path:'/thermal-printing/'}];
+---
+<BaseLayout title="Thermal Printing Calculators – Ribbon, ZPL & Printer Dots" description="Free thermal printing tools for ribbon capacity, ribbon quantity, ZPL label dimensions and 203/300/600 DPI printer dots." canonicalPath="/thermal-printing/" schemas={[breadcrumbSchema(crumbs, Astro.site)]}>
+  <Breadcrumbs items={[{name:'Home',href:'/'},{name:'Thermal Printing Tools'}]} />
+  <section class="hero"><div class="container"><span class="eyebrow">Thermal transfer & ZPL</span><h1>Thermal printing tools</h1><p class="lead">Plan ribbon consumption and convert physical label dimensions into printer-ready dot measurements.</p></div></section>
+  <section class="section"><div class="container"><div class="grid tool-grid">
+    <ToolCard href="/thermal-printing/thermal-ribbon-calculator/" title="Thermal Ribbon Calculator" description="Estimate labels per ribbon and ribbons required." />
+    <ToolCard href="/thermal-printing/zpl-label-size-calculator/" title="ZPL Label Size Calculator" description="Convert label dimensions into printer dots, ^PW and ^LL." />
+  </div></div></section>
+</BaseLayout>

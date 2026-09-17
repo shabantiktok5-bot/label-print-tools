@@ -1,0 +1,17 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Breadcrumbs from '../../components/Breadcrumbs.astro';
+import ToolCard from '../../components/ToolCard.astro';
+import { breadcrumbSchema } from '../../lib/seo';
+const crumbs = [{name:'Home',path:'/'},{name:'Label Roll Calculators',path:'/label-roll/'}];
+---
+<BaseLayout title="Label Roll Calculators – Capacity, Diameter, Length & Remaining Labels" description="Free label roll calculators for labels per roll, remaining label count, outside diameter and roll length using core size, material thickness and label pitch." canonicalPath="/label-roll/" schemas={[breadcrumbSchema(crumbs, Astro.site)]}>
+  <Breadcrumbs items={[{name:'Home',href:'/'},{name:'Label Roll Calculators'}]} />
+  <section class="hero"><div class="container"><span class="eyebrow">Label roll geometry</span><h1>Label roll calculators</h1><p class="lead">Calculate what is on a roll now, what will fit on a finished roll, or how large a roll must be for a target quantity.</p></div></section>
+  <section class="section"><div class="container"><div class="grid tool-grid">
+    <ToolCard href="/label-roll/labels-remaining-calculator/" title="Labels Remaining on Roll" description="Estimate a partial roll from measured OD, core, caliper and pitch." />
+    <ToolCard href="/label-roll/labels-per-roll-calculator/" title="Labels Per Roll" description="Estimate full roll capacity and linear length." />
+    <ToolCard href="/label-roll/roll-diameter-calculator/" title="Roll Diameter" description="Reverse-calculate the outside diameter for a required quantity." />
+    <ToolCard href="/label-roll/roll-length-calculator/" title="Roll Length" description="Calculate web length from roll geometry." />
+  </div></div></section>
+</BaseLayout>

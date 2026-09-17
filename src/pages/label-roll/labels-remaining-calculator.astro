@@ -1,0 +1,194 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Breadcrumbs from '../../components/Breadcrumbs.astro';
+import RelatedTools from '../../components/RelatedTools.astro';
+import RollDiagram from '../../components/RollDiagram.astro';
+import { breadcrumbSchema, webApplicationSchema } from '../../lib/seo';
+
+const title = 'Labels Remaining on Roll Calculator – Estimate Label Count';
+const description = 'Estimate how many labels remain on a partially used roll from current outer diameter, core diameter, material thickness and label pitch. Supports mixed units.';
+const path = '/label-roll/labels-remaining-calculator/';
+const crumbs = [
+  { name: 'Home', path: '/' },
+  { name: 'Label Roll Calculators', path: '/label-roll/' },
+  { name: 'Labels Remaining on Roll Calculator', path }
+];
+const schemas = [
+  breadcrumbSchema(crumbs, Astro.site),
+  webApplicationSchema({ name: 'Labels Remaining on Roll Calculator', description, path, site: Astro.site })
+];
+---
+<BaseLayout title={title} description={description} canonicalPath={path} schemas={schemas}>
+  <Breadcrumbs items={[{name:'Home',href:'/'},{name:'Label Roll Calculators',href:'/label-roll/'},{name:'Labels Remaining'}]} />
+
+  <section class="tool-page-head">
+    <div class="container">
+      <span class="eyebrow">Label roll inventory</span>
+      <h1>Labels Remaining on Roll Calculator</h1>
+      <p class="lead">Measure a partially used roll and estimate the number of labels still on it. Enter the dimensions in the units you actually have—mm, inches, microns or mil.</p>
+    </div>
+  </section>
+
+  <section class="container tool-layout" aria-label="Labels remaining calculator">
+    <div class="calculator">
+      <form id="labels-remaining-form">
+        <div class="form-grid">
+          <div class="field">
+            <label for="outerDiameter">Current roll outer diameter</label>
+            <div class="input-row">
+              <input id="outerDiameter" name="outerDiameter" type="number" min="0" step="any" value="150" inputmode="decimal" required />
+              <select name="outerDiameterUnit" class="unit" aria-label="Outer diameter unit">
+                <option value="mm">mm</option><option value="cm">cm</option><option value="in">in</option>
+              </select>
+            </div>
+          </div>
+          <div class="field">
+            <label for="coreDiameter">Core outside diameter</label>
+            <div class="input-row">
+              <input id="coreDiameter" name="coreDiameter" type="number" min="0" step="any" value="76" inputmode="decimal" required />
+              <select name="coreDiameterUnit" class="unit" aria-label="Core diameter unit">
+                <option value="mm">mm</option><option value="cm">cm</option><option value="in">in</option>
+              </select>
+            </div>
+          </div>
+          <div class="field">
+            <label for="thickness">Material + liner thickness</label>
+            <div class="input-row">
+              <input id="thickness" name="thickness" type="number" min="0" step="any" value="160" inputmode="decimal" required />
+              <select name="thicknessUnit" class="unit" aria-label="Material thickness unit">
+                <option value="um">µm</option><option value="mil">mil</option><option value="mm">mm</option>
+              </select>
+            </div>
+            <small>Use total caliper including the liner.</small>
+          </div>
+          <div class="field">
+            <label for="labelLength">Label length (machine direction)</label>
+            <div class="input-row">
+              <input id="labelLength" name="labelLength" type="number" min="0" step="any" value="100" inputmode="decimal" required />
+              <select name="labelLengthUnit" class="unit" aria-label="Label length unit">
+                <option value="mm">mm</option><option value="cm">cm</option><option value="in">in</option>
+              </select>
+            </div>
+          </div>
+          <div class="field">
+            <label for="gap">Gap between labels</label>
+            <div class="input-row">
+              <input id="gap" name="gap" type="number" min="0" step="any" value="3" inputmode="decimal" required />
+              <select name="gapUnit" class="unit" aria-label="Gap unit">
+                <option value="mm">mm</option><option value="cm">cm</option><option value="in">in</option>
+              </select>
+            </div>
+          </div>
+          <div class="field">
+            <label for="labelsAcross">Labels across the web</label>
+            <input id="labelsAcross" name="labelsAcross" type="number" min="1" step="1" value="1" inputmode="numeric" required />
+            <small>Use 1 for a single-column roll.</small>
+          </div>
+          <div class="field full">
+            <label for="fullOuterDiameter">Original/full roll OD <span style="font-weight:500;color:var(--muted)">(optional)</span></label>
+            <div class="input-row">
+              <input id="fullOuterDiameter" name="fullOuterDiameter" type="number" min="0" step="any" placeholder="e.g. 250" inputmode="decimal" />
+              <select name="fullOuterDiameterUnit" class="unit" aria-label="Full outer diameter unit">
+                <option value="mm">mm</option><option value="cm">cm</option><option value="in">in</option>
+              </select>
+            </div>
+            <small>Add the original roll OD to estimate the percentage of the roll remaining.</small>
+          </div>
+        </div>
+        <div class="calc-actions">
+          <button class="button primary" type="submit">Calculate remaining labels</button>
+          <button class="button secondary" type="reset">Reset</button>
+        </div>
+        <p id="error" class="error" role="alert" aria-live="polite"></p>
+      </form>
+
+      <div id="result" class="result" hidden aria-live="polite">
+        <span class="result-kicker">Estimated labels remaining</span>
+        <strong id="result-labels" class="result-main">—</strong>
+        <div class="result-grid">
+          <div class="metric"><span>Remaining web length</span><strong id="result-length">—</strong></div>
+          <div class="metric"><span>Repeat pitch</span><strong id="result-pitch">—</strong></div>
+          <div class="metric"><span>Roll remaining</span><strong id="result-percent">Add full OD</strong></div>
+        </div>
+        <p style="margin-bottom:0;color:var(--muted)">Geometric estimate only. Winding tension, liner compression, adhesive, manufacturing tolerances and measurement error can change the real count.</p>
+      </div>
+    </div>
+
+    <aside class="diagram-card" aria-label="How to measure the roll">
+      <h2>Measure the roll</h2>
+      <p>OD means the outside diameter of the wound roll. Core OD is the outside diameter of the cardboard or plastic core. Pitch is label length plus the gap.</p>
+      <RollDiagram />
+      <p><a href="/guides/how-to-measure-label-roll-diameter/">How to measure roll diameter correctly →</a></p>
+    </aside>
+  </section>
+
+  <section class="content">
+    <div class="narrow">
+      <h2>How the labels remaining calculation works</h2>
+      <p>The calculator first estimates the remaining web length from the area of the wound roll and the effective material thickness. It then divides the web length by the repeat pitch. If your roll has more than one label across the web, the repeat count is multiplied by that number of columns.</p>
+      <div class="formula">Web length = π × (OD² − Core OD²) ÷ (4 × material thickness)<br/>Pitch = label length + gap<br/>Estimated labels = floor(web length ÷ pitch) × labels across</div>
+
+      <h2>What thickness should you enter?</h2>
+      <p>Use the combined caliper of the facestock, adhesive and release liner—not just the face material. A small error in thickness can noticeably change the estimated quantity on a large roll. If you only know the manufacturer's nominal stock thickness, treat the result as an estimate rather than an inventory count.</p>
+
+      <h2>Why the physical count may differ</h2>
+      <p>Real rolls are not perfect mathematical cylinders. Compression, winding tension, air between layers, splices, missing labels, liner thickness variation and imperfect OD measurements all affect the result. For production-critical purchasing or reconciliation, verify a sample roll against an actual count and adjust the effective caliper if needed.</p>
+
+      <h2>Worked example</h2>
+      <p>A roll with a 150 mm current OD, 76 mm core OD, 160 µm total material thickness, 100 mm label length and 3 mm gap has a 103 mm pitch. The calculator converts all inputs to one internal unit before applying the roll-geometry formula, so mixed mm/inch/micron inputs are safe.</p>
+
+      <div class="note"><strong>Tip:</strong> If you know how many labels the roll originally contained, use a measured full-roll OD in the optional field. The tool will compare estimated web length rather than simply comparing diameters.</div>
+    </div>
+  </section>
+
+  <RelatedTools tools={[
+    { title:'Labels Per Roll Calculator', href:'/label-roll/labels-per-roll-calculator/', description:'Estimate capacity for a complete roll.' },
+    { title:'Roll Diameter Calculator', href:'/label-roll/roll-diameter-calculator/', description:'Reverse-calculate OD for a target quantity.' },
+    { title:'Label Linear Run Calculator', href:'/production/label-linear-run-calculator/', description:'Calculate web length required for an order.' }
+  ]} />
+
+  <script>
+    import { labelsFromRoll, rollLengthMm } from '../../lib/calculations';
+    import { formatNumber } from '../../lib/units';
+    import { lengthMm, num, rememberForm, setError, setText, showResult, hideResult } from '../../lib/calculator-ui';
+
+    const form = document.getElementById('labels-remaining-form') as HTMLFormElement;
+    rememberForm(form, 'labels-remaining');
+
+    function calculate() {
+      setError('');
+      try {
+        const outerDiameterMm = lengthMm(form, 'outerDiameter', 'outerDiameterUnit');
+        const coreDiameterMm = lengthMm(form, 'coreDiameter', 'coreDiameterUnit');
+        const thicknessMm = lengthMm(form, 'thickness', 'thicknessUnit');
+        const labelLengthMm = lengthMm(form, 'labelLength', 'labelLengthUnit');
+        const gapMm = lengthMm(form, 'gap', 'gapUnit');
+        const labelsAcross = num(form, 'labelsAcross');
+        const pitchMm = labelLengthMm + gapMm;
+        const result = labelsFromRoll({ outerDiameterMm, coreDiameterMm, thicknessMm, pitchMm, labelsAcross });
+
+        setText('result-labels', formatNumber(result.labels, 0));
+        setText('result-length', result.lengthMm >= 1000 ? `${formatNumber(result.lengthMm / 1000, 2)} m` : `${formatNumber(result.lengthMm, 1)} mm`);
+        setText('result-pitch', `${formatNumber(pitchMm, 2)} mm`);
+
+        const fullOdField = form.elements.namedItem('fullOuterDiameter') as HTMLInputElement;
+        if (fullOdField.value.trim()) {
+          const fullOuterDiameterMm = lengthMm(form, 'fullOuterDiameter', 'fullOuterDiameterUnit');
+          const fullLength = rollLengthMm({ outerDiameterMm: fullOuterDiameterMm, coreDiameterMm, thicknessMm });
+          const pct = Math.min(100, Math.max(0, (result.lengthMm / fullLength) * 100));
+          setText('result-percent', `${formatNumber(pct, 1)}%`);
+        } else {
+          setText('result-percent', 'Add full OD');
+        }
+        showResult();
+      } catch (error) {
+        hideResult();
+        setError(error instanceof Error ? error.message : 'Check the values and try again.');
+      }
+    }
+
+    form.addEventListener('submit', (event) => { event.preventDefault(); calculate(); });
+    form.addEventListener('reset', () => { setTimeout(() => { hideResult(); setError(''); }, 0); });
+    calculate();
+  </script>
+</BaseLayout>

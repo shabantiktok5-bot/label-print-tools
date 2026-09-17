@@ -1,0 +1,104 @@
+---
+import '../styles/global.css';
+import { siteConfig } from '../config/site';
+
+interface Props {
+  title?: string;
+  description?: string;
+  canonicalPath?: string;
+  schemas?: Record<string, unknown>[];
+  noindex?: boolean;
+  ogType?: 'website' | 'article';
+}
+
+const {
+  title = siteConfig.name,
+  description = siteConfig.description,
+  canonicalPath = Astro.url.pathname,
+  schemas = [],
+  noindex = false,
+  ogType = 'website'
+} = Astro.props;
+
+const site = Astro.site ?? new URL('https://labelmetric.example');
+const canonical = new URL(canonicalPath, site).toString();
+const socialImage = new URL(siteConfig.socialImage, site).toString();
+---
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="color-scheme" content="light" />
+    <meta name="theme-color" content="#1769e0" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+    <meta name="robots" content={noindex ? 'noindex,nofollow' : 'index,follow,max-image-preview:large,max-snippet:-1,max-video-preview:-1'} />
+    <meta property="og:type" content={ogType} />
+    <meta property="og:site_name" content={siteConfig.name} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:image" content={socialImage} />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={socialImage} />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    {schemas.map((schema) => <script type="application/ld+json" set:html={JSON.stringify(schema)}></script>)}
+  </head>
+  <body>
+    <a class="skip-link" href="#main">Skip to content</a>
+    <header class="site-header">
+      <div class="container header-inner">
+        <a class="brand" href="/" aria-label={`${siteConfig.name} home`}>
+          <span class="brand-mark" aria-hidden="true">LM</span>
+          <span>{siteConfig.name}</span>
+        </a>
+        <nav class="desktop-nav" aria-label="Primary navigation">
+          {siteConfig.nav.map((item) => <a href={item.href}>{item.label}</a>)}
+        </nav>
+        <details class="mobile-nav">
+          <summary>Menu</summary>
+          <nav aria-label="Mobile navigation">
+            {siteConfig.nav.map((item) => <a href={item.href}>{item.label}</a>)}
+            <a href="/methodology/">Methodology</a>
+          </nav>
+        </details>
+      </div>
+    </header>
+    <main id="main">
+      <slot />
+    </main>
+    <footer class="site-footer">
+      <div class="container">
+        <div class="footer-grid">
+          <div>
+            <a class="brand" href="/">
+              <span class="brand-mark" aria-hidden="true">LM</span>
+              <span>{siteConfig.name}</span>
+            </a>
+            <p>{siteConfig.tagline}</p>
+          </div>
+          <div class="footer-links">
+            <strong>Tools</strong>
+            <a href="/label-roll/">Label roll calculators</a>
+            <a href="/production/">Production calculators</a>
+            <a href="/thermal-printing/">Thermal printing tools</a>
+            <a href="/sheet-labels/">Sheet label tools</a>
+          </div>
+          <div class="footer-links">
+            <strong>Site</strong>
+            <a href="/methodology/">Methodology</a>
+            <a href="/about/">About</a>
+            <a href="/contact/">Contact</a>
+            <a href="/privacy/">Privacy</a>
+            <a href="/terms/">Terms</a>
+          </div>
+        </div>
+        <div class="footer-bottom">© {new Date().getFullYear()} {siteConfig.name}. Calculations are estimates; verify production-critical specifications with your material and equipment documentation.</div>
+      </div>
+    </footer>
+  </body>
+</html>
